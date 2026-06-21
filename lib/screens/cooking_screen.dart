@@ -1084,7 +1084,7 @@ class _CookingScreenState extends State<CookingScreen> {
                           ),
                           if (_currentStep < recipe.steps.length - 1) ...[
                             const SizedBox(width: 4),
-                            Icon(
+                            const Icon(
                               Icons.arrow_forward_rounded,
                               size: 20,
                               color: ThemeService.pureWhite,

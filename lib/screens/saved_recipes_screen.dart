@@ -85,7 +85,7 @@ class _SavedRecipesScreenState extends State<SavedRecipesScreen> {
         ),
         title: Row(
           children: [
-            Icon(Icons.delete_outline, color: ThemeService.fieryRed, size: 26),
+            const Icon(Icons.delete_outline, color: ThemeService.fieryRed, size: 26),
             const SizedBox(width: 10),
             Text(
               'Delete Recipe',
@@ -119,7 +119,7 @@ class _SavedRecipesScreenState extends State<SavedRecipesScreen> {
           ),
           Container(
             decoration: BoxDecoration(
-              gradient: LinearGradient(
+              gradient: const LinearGradient(
                 colors: [ThemeService.fieryRed, ThemeService.deepRed],
               ),
               borderRadius: BorderRadius.circular(14),
@@ -264,7 +264,7 @@ class _SavedRecipesScreenState extends State<SavedRecipesScreen> {
                           child: Container(
                             padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
                             decoration: BoxDecoration(
-                              gradient: LinearGradient(
+                              gradient: const LinearGradient(
                                 colors: [ThemeService.fieryRed, ThemeService.deepRed],
                               ),
                               borderRadius: BorderRadius.circular(16),
@@ -351,7 +351,7 @@ class _SavedRecipesScreenState extends State<SavedRecipesScreen> {
                         ),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Center(
+                      child: const Center(
                         child: Icon(Icons.restaurant_menu, color: ThemeService.fieryRed, size: 22),
                       ),
                     ),
@@ -429,7 +429,7 @@ class _SavedRecipesScreenState extends State<SavedRecipesScreen> {
                             value: 'delete',
                             child: Row(
                               children: [
-                                Icon(Icons.delete_outline, color: ThemeService.fieryRed, size: 20),
+                                const Icon(Icons.delete_outline, color: ThemeService.fieryRed, size: 20),
                                 const SizedBox(width: 10),
                                 Text(
                                   'Delete Recipe',

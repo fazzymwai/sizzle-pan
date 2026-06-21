@@ -69,7 +69,7 @@ class RecipeCard extends StatelessWidget {
                         ),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Center(
+                      child: const Center(
                         child: Icon(
                           Icons.restaurant_menu,
                           color: ThemeService.fieryRed,
@@ -113,7 +113,7 @@ class RecipeCard extends StatelessWidget {
                             color: ThemeService.softCoral,
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          child: Icon(
+                          child: const Icon(
                             Icons.bookmark_add_outlined,
                             color: ThemeService.fieryRed,
                             size: 20,

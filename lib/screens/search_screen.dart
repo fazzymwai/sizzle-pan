@@ -54,9 +54,9 @@ class _SearchScreenState extends State<SearchScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Row(
+            content: const Row(
               children: [
-                const Text('\u2705 '),
+                Text('\u2705 '),
                 Text('Recipe saved!'),
               ],
             ),
@@ -239,7 +239,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             color: ThemeService.warmGrey.withValues(alpha: 0.5),
                             fontSize: 14,
                           ),
-                          prefixIcon: Icon(
+                          prefixIcon: const Icon(
                             Icons.search_rounded,
                             color: ThemeService.fieryRed,
                             size: 22,

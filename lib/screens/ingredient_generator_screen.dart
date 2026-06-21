@@ -278,7 +278,7 @@ class _IngredientGeneratorScreenState extends State<IngredientGeneratorScreen> {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.add,
                             size: 18,
                             color: ThemeService.pureWhite,
@@ -362,7 +362,7 @@ class _IngredientGeneratorScreenState extends State<IngredientGeneratorScreen> {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text(
+                          const Text(
                             '\u{1F358} ',
                             style: TextStyle(fontSize: 14),
                           ),
@@ -428,7 +428,7 @@ class _IngredientGeneratorScreenState extends State<IngredientGeneratorScreen> {
                   ),
                   child: Center(
                     child: _isGenerating
-                        ? SizedBox(
+                        ? const SizedBox(
                             height: 22,
                             width: 22,
                             child: CircularProgressIndicator(
@@ -439,7 +439,7 @@ class _IngredientGeneratorScreenState extends State<IngredientGeneratorScreen> {
                         : Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text(
+                              const Text(
                                 '\u{1F52E} ',
                                 style: TextStyle(fontSize: 18),
                               ),
@@ -486,7 +486,7 @@ class _IngredientGeneratorScreenState extends State<IngredientGeneratorScreen> {
                             child: Center(
                               child: Text(
                                 _ingredients.isEmpty ? '\u{1F957}' : '\u{1F373}',
-                                style: TextStyle(fontSize: 38),
+                                style: const TextStyle(fontSize: 38),
                               ),
                             ),
                           ),

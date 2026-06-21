@@ -113,7 +113,7 @@ class ThemeService extends ChangeNotifier {
         shadowColor: fieryRed.withValues(alpha: 0.15),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
-          side: BorderSide(color: warmCream, width: 1),
+          side: const BorderSide(color: warmCream, width: 1),
         ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
@@ -181,7 +181,7 @@ class ThemeService extends ChangeNotifier {
         color: warmGrey.withValues(alpha: 0.15),
         thickness: 1,
       ),
-      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         backgroundColor: pureWhite,
         selectedItemColor: fieryRed,
         unselectedItemColor: warmGrey,
@@ -251,7 +251,7 @@ class ThemeService extends ChangeNotifier {
         shadowColor: Colors.black38,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
-          side: BorderSide(color: const Color(0xFF3D322A), width: 1),
+          side: const BorderSide(color: Color(0xFF3D322A), width: 1),
         ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
@@ -315,14 +315,14 @@ class ThemeService extends ChangeNotifier {
           side: BorderSide.none,
         ),
       ),
-      dividerTheme: DividerThemeData(
-        color: const Color(0xFF3D322A),
+      dividerTheme: const DividerThemeData(
+        color: Color(0xFF3D322A),
         thickness: 1,
       ),
-      bottomNavigationBarTheme: BottomNavigationBarThemeData(
-        backgroundColor: const Color(0xFF2A221C),
+      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+        backgroundColor: Color(0xFF2A221C),
         selectedItemColor: warmOrange,
-        unselectedItemColor: const Color(0xFFB0A79E),
+        unselectedItemColor: Color(0xFFB0A79E),
         type: BottomNavigationBarType.fixed,
         elevation: 8,
       ),

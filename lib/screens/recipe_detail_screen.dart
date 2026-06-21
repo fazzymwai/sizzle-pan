@@ -258,10 +258,10 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                     ],
                   ),
                 ),
-                child: Center(
+                child: const Center(
                   child: Opacity(
                     opacity: 0.15,
-                    child: const Text(
+                    child: Text(
                       '\u{1F373}',
                       style: TextStyle(fontSize: 120),
                     ),
@@ -665,7 +665,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                 color: ThemeService.goldenYellow.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Icon(
+              child: const Icon(
                 Icons.sticky_note_2_rounded,
                 size: 18,
                 color: ThemeService.goldenYellow,
