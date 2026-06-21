@@ -11,6 +11,7 @@ import 'package:sizzle_pan/screens/saved_recipes_screen.dart';
 import 'package:sizzle_pan/services/theme_service.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const SizzlePanApp());
 }
 
