@@ -7,12 +7,16 @@ class RecipeCard extends StatelessWidget {
   final Recipe recipe;
   final VoidCallback onTap;
   final VoidCallback? onSave;
+  final VoidCallback? onDelete;
+  final VoidCallback? onToggleFavorite;
 
   const RecipeCard({
     super.key,
     required this.recipe,
     required this.onTap,
     this.onSave,
+    this.onDelete,
+    this.onToggleFavorite,
   });
 
   @override
@@ -25,14 +29,10 @@ class RecipeCard extends StatelessWidget {
         onTap: onTap,
         child: Container(
           decoration: BoxDecoration(
-            color: isDark
-                ? const Color(0xFF2A221C)
-                : ThemeService.pureWhite,
+            color: isDark ? const Color(0xFF2A221C) : ThemeService.pureWhite,
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-              color: isDark
-                  ? const Color(0xFF3D322A)
-                  : ThemeService.warmCream,
+              color: isDark ? const Color(0xFF3D322A) : ThemeService.warmCream,
               width: 1,
             ),
             boxShadow: [
@@ -104,11 +104,54 @@ class RecipeCard extends StatelessWidget {
                         ],
                       ),
                     ),
+                    if (onToggleFavorite != null)
+                      GestureDetector(
+                        onTap: onToggleFavorite,
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          margin: const EdgeInsets.only(left: 4),
+                          decoration: BoxDecoration(
+                            color: recipe.isFavorite
+                                ? ThemeService.fieryRed.withValues(alpha: 0.15)
+                                : (isDark
+                                    ? const Color(0xFF3D322A)
+                                    : ThemeService.softCoral),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Icon(
+                            recipe.isFavorite
+                                ? Icons.favorite
+                                : Icons.favorite_border,
+                            color: recipe.isFavorite
+                                ? ThemeService.fieryRed
+                                : ThemeService.warmGrey,
+                            size: 20,
+                          ),
+                        ),
+                      ),
+                    if (onDelete != null)
+                      GestureDetector(
+                        onTap: onDelete,
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          margin: const EdgeInsets.only(left: 4),
+                          decoration: BoxDecoration(
+                            color: ThemeService.fieryRed.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Icon(
+                            Icons.delete_outline,
+                            color: ThemeService.fieryRed,
+                            size: 20,
+                          ),
+                        ),
+                      ),
                     if (onSave != null)
                       GestureDetector(
                         onTap: onSave,
                         child: Container(
                           padding: const EdgeInsets.all(8),
+                          margin: const EdgeInsets.only(left: 4),
                           decoration: BoxDecoration(
                             color: ThemeService.softCoral,
                             borderRadius: BorderRadius.circular(12),
@@ -170,18 +213,14 @@ class RecipeCard extends StatelessWidget {
         Icon(
           icon,
           size: 14,
-          color: isDark
-              ? const Color(0xFFB0A79E)
-              : ThemeService.warmGrey,
+          color: isDark ? const Color(0xFFB0A79E) : ThemeService.warmGrey,
         ),
         const SizedBox(width: 4),
         Text(
           label,
           style: GoogleFonts.nunito(
             fontSize: 12,
-            color: isDark
-                ? const Color(0xFFB0A79E)
-                : ThemeService.warmGrey,
+            color: isDark ? const Color(0xFFB0A79E) : ThemeService.warmGrey,
             fontWeight: FontWeight.w500,
           ),
         ),

@@ -1,9 +1,10 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sizzle_pan/models/recipe.dart';
+import 'package:sizzle_pan/providers/recipe_provider.dart';
 import 'package:sizzle_pan/services/ai_service.dart';
-import 'package:sizzle_pan/services/database_service.dart';
 import 'package:sizzle_pan/services/theme_service.dart';
 import 'package:sizzle_pan/widgets/recipe_card.dart';
 
@@ -16,7 +17,12 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController _searchController = TextEditingController();
-  final List<String> _remixOptions = ['Original', 'Healthier', 'Faster', 'Creative'];
+  final List<String> _remixOptions = [
+    'Original',
+    'Healthier',
+    'Faster',
+    'Creative'
+  ];
   final List<String> _remixEmojis = ['ðŸ½ï¸', 'ðŸ¥—', 'âš¡', 'ðŸŽ¨'];
   String _selectedRemix = 'Original';
   List<Recipe> _searchResults = [];
@@ -41,16 +47,22 @@ class _SearchScreenState extends State<SearchScreen> {
   Future<void> _searchRecipes() async {
     final query = _searchController.text.trim();
     if (query.isEmpty) return;
-    setState(() { _isSearching = true; });
+    setState(() {
+      _isSearching = true;
+    });
     await Future.delayed(const Duration(milliseconds: 300));
-    final localResults = await DatabaseService.searchRecipes(query);
+    final localResults =
+        await context.read<RecipeProvider>().searchRecipes(query);
     final aiResults = AIService.searchAndRemixRecipes(query, _selectedRemix);
-    setState(() { _searchResults = [...localResults, ...aiResults]; _isSearching = false; });
+    setState(() {
+      _searchResults = [...localResults, ...aiResults];
+      _isSearching = false;
+    });
   }
 
   Future<void> _saveRecipe(Recipe recipe) async {
     try {
-      await DatabaseService.createRecipe(recipe);
+      await context.read<RecipeProvider>().saveRecipe(recipe);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -62,7 +74,8 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
             backgroundColor: ThemeService.fieryRed,
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           ),
         );
       }
@@ -73,7 +86,8 @@ class _SearchScreenState extends State<SearchScreen> {
             content: const Text('Failed to save recipe'),
             backgroundColor: ThemeService.warmGrey,
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           ),
         );
       }
@@ -99,9 +113,7 @@ class _SearchScreenState extends State<SearchScreen> {
           child: Container(
             margin: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: isDark
-                  ? const Color(0xFF2A221C)
-                  : ThemeService.warmCream,
+              color: isDark ? const Color(0xFF2A221C) : ThemeService.warmCream,
               borderRadius: BorderRadius.circular(12),
             ),
             child: const Icon(Icons.arrow_back),
@@ -161,14 +173,16 @@ class _SearchScreenState extends State<SearchScreen> {
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                                 colors: [
-                                  ThemeService.goldenYellow.withValues(alpha: 0.2),
+                                  ThemeService.goldenYellow
+                                      .withValues(alpha: 0.2),
                                   ThemeService.fieryRed.withValues(alpha: 0.1),
                                 ],
                               ),
                               borderRadius: BorderRadius.circular(16),
                             ),
                             child: const Center(
-                              child: Text('\u{1F50D}', style: TextStyle(fontSize: 24)),
+                              child: Text('\u{1F50D}',
+                                  style: TextStyle(fontSize: 24)),
                             ),
                           ),
                           const SizedBox(width: 14),
@@ -255,7 +269,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                   child: Container(
                                     margin: const EdgeInsets.all(10),
                                     decoration: BoxDecoration(
-                                      color: ThemeService.warmGrey.withValues(alpha: 0.1),
+                                      color: ThemeService.warmGrey
+                                          .withValues(alpha: 0.1),
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                     child: const Icon(Icons.close, size: 18),
@@ -353,7 +368,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                     ? Colors.transparent
                                     : isDark
                                         ? const Color(0xFF3D322A)
-                                        : ThemeService.warmGrey.withValues(alpha: 0.2),
+                                        : ThemeService.warmGrey
+                                            .withValues(alpha: 0.2),
                               ),
                               boxShadow: isSelected
                                   ? [
@@ -371,14 +387,16 @@ class _SearchScreenState extends State<SearchScreen> {
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Text(emoji, style: const TextStyle(fontSize: 16)),
+                                Text(emoji,
+                                    style: const TextStyle(fontSize: 16)),
                                 const SizedBox(width: 8),
                                 Text(
                                   option,
                                   style: GoogleFonts.nunito(
                                     fontSize: 14,
-                                    fontWeight:
-                                        isSelected ? FontWeight.w700 : FontWeight.w600,
+                                    fontWeight: isSelected
+                                        ? FontWeight.w700
+                                        : FontWeight.w600,
                                     color: isSelected
                                         ? Colors.white
                                         : isDark
@@ -406,8 +424,10 @@ class _SearchScreenState extends State<SearchScreen> {
                             end: Alignment.centerRight,
                             colors: _isSearching
                                 ? [
-                                    ThemeService.warmGrey.withValues(alpha: 0.4),
-                                    ThemeService.warmGrey.withValues(alpha: 0.3),
+                                    ThemeService.warmGrey
+                                        .withValues(alpha: 0.4),
+                                    ThemeService.warmGrey
+                                        .withValues(alpha: 0.3),
                                   ]
                                 : isDark
                                     ? [
@@ -443,7 +463,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                       width: 22,
                                       child: CircularProgressIndicator(
                                         strokeWidth: 2.5,
-                                        valueColor: AlwaysStoppedAnimation<Color>(
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
                                           isDark
                                               ? ThemeService.charcoal
                                               : ThemeService.pureWhite,
@@ -466,7 +487,8 @@ class _SearchScreenState extends State<SearchScreen> {
                               : Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    const Text('\u{1F52A}', style: TextStyle(fontSize: 20)),
+                                    const Text('\u{1F52A}',
+                                        style: TextStyle(fontSize: 20)),
                                     const SizedBox(width: 10),
                                     Text(
                                       'Search & Sizzle',
@@ -506,7 +528,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                 vertical: 4,
                               ),
                               decoration: BoxDecoration(
-                                color: ThemeService.fieryRed.withValues(alpha: 0.1),
+                                color: ThemeService.fieryRed
+                                    .withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(100),
                               ),
                               child: Text(
@@ -551,7 +574,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           final recipe = _searchResults[index];
                           return RecipeCard(
                             recipe: recipe,
-                            onTap: () => context.go('/recipe/${recipe.id}'),
+                            onTap: () => context.push('/recipe/${recipe.id}'),
                             onSave: () => _saveRecipe(recipe),
                           );
                         },
@@ -571,9 +594,7 @@ class _SearchScreenState extends State<SearchScreen> {
       width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 48, horizontal: 24),
       decoration: BoxDecoration(
-        color: isDark
-            ? const Color(0xFF2A221C)
-            : ThemeService.warmCream,
+        color: isDark ? const Color(0xFF2A221C) : ThemeService.warmCream,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
           color: isDark
@@ -606,9 +627,7 @@ class _SearchScreenState extends State<SearchScreen> {
             'Nothing on the stove yet!',
             style: GoogleFonts.luckiestGuy(
               fontSize: 18,
-              color: isDark
-                  ? const Color(0xFFF5EDE6)
-                  : ThemeService.charcoal,
+              color: isDark ? const Color(0xFFF5EDE6) : ThemeService.charcoal,
               letterSpacing: 0.3,
             ),
           ),
@@ -628,4 +647,3 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 }
-

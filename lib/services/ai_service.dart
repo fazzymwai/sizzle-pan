@@ -2,14 +2,16 @@ import 'package:sizzle_pan/models/recipe.dart';
 
 class AIService {
   // Template-based recipe generation for free AI functionality
-  
+
   static List<Recipe> generateRecipesFromIngredients(List<String> ingredients) {
     final recipes = <Recipe>[];
     final ingredientSet = ingredients.map((e) => e.toLowerCase()).toSet();
-    
+
     // Pasta recipes
-    if (ingredientSet.contains('pasta') || ingredientSet.contains('spaghetti')) {
-      if (ingredientSet.contains('tomato') || ingredientSet.contains('tomatoes')) {
+    if (ingredientSet.contains('pasta') ||
+        ingredientSet.contains('spaghetti')) {
+      if (ingredientSet.contains('tomato') ||
+          ingredientSet.contains('tomatoes')) {
         recipes.add(_createPastaRecipe('Simple Tomato Pasta', ingredients));
       }
       if (ingredientSet.contains('garlic')) {
@@ -19,7 +21,7 @@ class AIService {
         recipes.add(_createPastaRecipe('Cheesy Pasta', ingredients));
       }
     }
-    
+
     // Egg recipes
     if (ingredientSet.contains('eggs') || ingredientSet.contains('egg')) {
       if (ingredientSet.contains('bread')) {
@@ -30,35 +32,36 @@ class AIService {
       }
       recipes.add(_createEggRecipe('Scrambled Eggs', ingredients));
     }
-    
+
     // Rice recipes
     if (ingredientSet.contains('rice')) {
       if (ingredientSet.contains('beans')) {
         recipes.add(_createRiceRecipe('Rice and Beans', ingredients));
       }
-      if (ingredientSet.contains('vegetables') || _hasVegetables(ingredientSet)) {
+      if (ingredientSet.contains('vegetables') ||
+          _hasVegetables(ingredientSet)) {
         recipes.add(_createRiceRecipe('Vegetable Rice', ingredients));
       }
     }
-    
+
     // Vegetable stir-fry
     if (_hasVegetables(ingredientSet)) {
       recipes.add(_createStirFryRecipe('Vegetable Stir-Fry', ingredients));
     }
-    
+
     // Soup recipes
     if (ingredientSet.contains('water') || ingredientSet.contains('broth')) {
       if (_hasVegetables(ingredientSet)) {
         recipes.add(_createSoupRecipe('Vegetable Soup', ingredients));
       }
     }
-    
+
     return recipes;
   }
-  
+
   static List<Recipe> generateRecipesFromMood(String mood, String occasion) {
     final recipes = <Recipe>[];
-    
+
     switch (mood.toLowerCase()) {
       case 'tired':
       case 'lazy':
@@ -74,14 +77,14 @@ class AIService {
       default:
         recipes.addAll(_getComfortRecipes(occasion));
     }
-    
+
     return recipes;
   }
-  
+
   static List<Recipe> searchAndRemixRecipes(String query, String remixType) {
     final baseRecipes = _getCommonRecipes(query);
     final remixedRecipes = <Recipe>[];
-    
+
     for (final recipe in baseRecipes) {
       switch (remixType.toLowerCase()) {
         case 'healthier':
@@ -97,13 +100,14 @@ class AIService {
           remixedRecipes.add(recipe);
       }
     }
-    
+
     return remixedRecipes;
   }
-  
-  static String getCookingAdvice(String question, Recipe recipe, int currentStep) {
+
+  static String getCookingAdvice(
+      String question, Recipe recipe, int currentStep) {
     final questionLower = question.toLowerCase();
-    
+
     if (questionLower.contains('next') || questionLower.contains('what next')) {
       if (currentStep < recipe.steps.length - 1) {
         return 'Next step: ${recipe.steps[currentStep + 1]}';
@@ -111,35 +115,59 @@ class AIService {
         return 'You\'re all done! Enjoy your meal!';
       }
     }
-    
-    if (questionLower.contains('substitute') || questionLower.contains('replace')) {
+
+    if (questionLower.contains('substitute') ||
+        questionLower.contains('replace')) {
       return _getSubstitutionAdvice(questionLower, recipe);
     }
-    
+
     if (questionLower.contains('how long') || questionLower.contains('time')) {
       return 'This recipe takes about ${recipe.cookingTime} minutes total. You\'re currently on step ${currentStep + 1} of ${recipe.steps.length}.';
     }
-    
-    if (questionLower.contains('temperature') || questionLower.contains('heat')) {
+
+    if (questionLower.contains('temperature') ||
+        questionLower.contains('heat')) {
       return 'Use medium heat for best results. Adjust as needed based on your stove.';
     }
-    
+
     return 'Take your time and follow the recipe carefully. Cooking should be enjoyable!';
   }
-  
-  // Helper methods
+
+  // Helper to convert String list to RecipeIngredient list
+  static List<RecipeIngredient> _toIngredients(List<String> items) {
+    return items
+        .map((e) => RecipeIngredient(name: e, amount: '', owned: true))
+        .toList();
+  }
+
   static bool _hasVegetables(Set<String> ingredients) {
-    final vegetables = ['carrot', 'carrots', 'onion', 'onions', 'pepper', 'peppers', 
-                       'tomato', 'tomatoes', 'broccoli', 'spinach', 'mushroom', 'mushrooms',
-                       'garlic', 'potato', 'potatoes', 'celery', 'cabbage'];
+    final vegetables = [
+      'carrot',
+      'carrots',
+      'onion',
+      'onions',
+      'pepper',
+      'peppers',
+      'tomato',
+      'tomatoes',
+      'broccoli',
+      'spinach',
+      'mushroom',
+      'mushrooms',
+      'garlic',
+      'potato',
+      'potatoes',
+      'celery',
+      'cabbage'
+    ];
     return ingredients.any((ing) => vegetables.contains(ing));
   }
-  
+
   static Recipe _createPastaRecipe(String title, List<String> ingredients) {
     return Recipe(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       title: title,
-      ingredients: ingredients,
+      ingredients: _toIngredients(ingredients),
       steps: [
         'Boil water in a large pot',
         'Add pasta and cook according to package directions',
@@ -155,12 +183,12 @@ class AIService {
       updatedAt: DateTime.now(),
     );
   }
-  
+
   static Recipe _createEggRecipe(String title, List<String> ingredients) {
     return Recipe(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       title: title,
-      ingredients: ingredients,
+      ingredients: _toIngredients(ingredients),
       steps: [
         'Crack eggs into a bowl',
         'Beat eggs with a fork',
@@ -176,12 +204,12 @@ class AIService {
       updatedAt: DateTime.now(),
     );
   }
-  
+
   static Recipe _createRiceRecipe(String title, List<String> ingredients) {
     return Recipe(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       title: title,
-      ingredients: ingredients,
+      ingredients: _toIngredients(ingredients),
       steps: [
         'Rinse rice if needed',
         'Add rice and water to pot',
@@ -197,12 +225,12 @@ class AIService {
       updatedAt: DateTime.now(),
     );
   }
-  
+
   static Recipe _createStirFryRecipe(String title, List<String> ingredients) {
     return Recipe(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       title: title,
-      ingredients: ingredients,
+      ingredients: _toIngredients(ingredients),
       steps: [
         'Heat oil in a wok or large pan',
         'Add harder vegetables first',
@@ -218,12 +246,12 @@ class AIService {
       updatedAt: DateTime.now(),
     );
   }
-  
+
   static Recipe _createSoupRecipe(String title, List<String> ingredients) {
     return Recipe(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       title: title,
-      ingredients: ingredients,
+      ingredients: _toIngredients(ingredients),
       steps: [
         'Heat oil in a large pot',
         'Add vegetables and cook until soft',
@@ -240,13 +268,13 @@ class AIService {
       updatedAt: DateTime.now(),
     );
   }
-  
+
   static List<Recipe> _getEasyRecipes(String occasion) {
     return [
       Recipe(
         id: 'easy1',
         title: 'Quick Scrambled Eggs',
-        ingredients: ['eggs', 'butter', 'salt', 'pepper'],
+        ingredients: _toIngredients(['eggs', 'butter', 'salt', 'pepper']),
         steps: ['Crack eggs', 'Beat them', 'Cook in pan', 'Season and serve'],
         cookingTime: 5,
         servings: 1,
@@ -258,7 +286,7 @@ class AIService {
       Recipe(
         id: 'easy2',
         title: 'Simple Toast',
-        ingredients: ['bread', 'butter'],
+        ingredients: _toIngredients(['bread', 'butter']),
         steps: ['Toast bread', 'Add butter', 'Serve'],
         cookingTime: 3,
         servings: 1,
@@ -269,14 +297,20 @@ class AIService {
       ),
     ];
   }
-  
+
   static List<Recipe> _getAdventurousRecipes(String occasion) {
     return [
       Recipe(
         id: 'adv1',
         title: 'Fusion Stir-Fry',
-        ingredients: ['rice', 'vegetables', 'soy sauce', 'garlic', 'ginger'],
-        steps: ['Cook rice', 'Stir-fry vegetables', 'Add sauce', 'Combine and serve'],
+        ingredients: _toIngredients(
+            ['rice', 'vegetables', 'soy sauce', 'garlic', 'ginger']),
+        steps: [
+          'Cook rice',
+          'Stir-fry vegetables',
+          'Add sauce',
+          'Combine and serve'
+        ],
         cookingTime: 25,
         servings: 2,
         difficulty: 'Medium',
@@ -286,14 +320,20 @@ class AIService {
       ),
     ];
   }
-  
+
   static List<Recipe> _getRomanticRecipes(String occasion) {
     return [
       Recipe(
         id: 'rom1',
         title: 'Heart-Shaped Pancakes',
-        ingredients: ['flour', 'milk', 'eggs', 'sugar', 'butter'],
-        steps: ['Mix batter', 'Pour heart shapes', 'Cook until golden', 'Serve with love'],
+        ingredients:
+            _toIngredients(['flour', 'milk', 'eggs', 'sugar', 'butter']),
+        steps: [
+          'Mix batter',
+          'Pour heart shapes',
+          'Cook until golden',
+          'Serve with love'
+        ],
         cookingTime: 20,
         servings: 2,
         difficulty: 'Easy',
@@ -303,14 +343,19 @@ class AIService {
       ),
     ];
   }
-  
+
   static List<Recipe> _getComfortRecipes(String occasion) {
     return [
       Recipe(
         id: 'comf1',
         title: 'Comfort Oatmeal',
-        ingredients: ['oats', 'milk', 'honey', 'cinnamon'],
-        steps: ['Cook oats', 'Add milk', 'Sweeten with honey', 'Sprinkle cinnamon'],
+        ingredients: _toIngredients(['oats', 'milk', 'honey', 'cinnamon']),
+        steps: [
+          'Cook oats',
+          'Add milk',
+          'Sweeten with honey',
+          'Sprinkle cinnamon'
+        ],
         cookingTime: 10,
         servings: 1,
         difficulty: 'Easy',
@@ -320,10 +365,10 @@ class AIService {
       ),
     ];
   }
-  
+
   static List<Recipe> _getCommonRecipes(String query) {
     final queryLower = query.toLowerCase();
-    
+
     if (queryLower.contains('pancake')) {
       return [_getPancakeRecipe()];
     } else if (queryLower.contains('pasta')) {
@@ -331,15 +376,16 @@ class AIService {
     } else if (queryLower.contains('rice')) {
       return [_getRiceRecipe()];
     }
-    
+
     return [];
   }
-  
+
   static Recipe _getPancakeRecipe() {
     return Recipe(
       id: 'pancake',
       title: 'Classic Pancakes',
-      ingredients: ['flour', 'milk', 'eggs', 'sugar', 'butter', 'baking powder'],
+      ingredients: _toIngredients(
+          ['flour', 'milk', 'eggs', 'sugar', 'butter', 'baking powder']),
       steps: [
         'Mix dry ingredients',
         'Add wet ingredients',
@@ -355,12 +401,13 @@ class AIService {
       updatedAt: DateTime.now(),
     );
   }
-  
+
   static Recipe _getPastaRecipe() {
     return Recipe(
       id: 'pasta',
       title: 'Basic Pasta',
-      ingredients: ['pasta', 'tomato sauce', 'garlic', 'olive oil', 'basil'],
+      ingredients: _toIngredients(
+          ['pasta', 'tomato sauce', 'garlic', 'olive oil', 'basil']),
       steps: [
         'Boil pasta water',
         'Cook pasta al dente',
@@ -376,12 +423,12 @@ class AIService {
       updatedAt: DateTime.now(),
     );
   }
-  
+
   static Recipe _getRiceRecipe() {
     return Recipe(
       id: 'rice',
       title: 'Steamed Rice',
-      ingredients: ['rice', 'water', 'salt'],
+      ingredients: _toIngredients(['rice', 'water', 'salt']),
       steps: [
         'Rinse rice',
         'Add water and salt',
@@ -397,29 +444,33 @@ class AIService {
       updatedAt: DateTime.now(),
     );
   }
-  
+
   static Recipe _makeHealthier(Recipe recipe) {
     final healthierIngredients = recipe.ingredients.map((ing) {
-      if (ing.contains('butter')) return ing.replaceFirst('butter', 'olive oil');
-      if (ing.contains('cream')) return ing.replaceFirst('cream', 'Greek yogurt');
-      if (ing.contains('sugar')) return ing.replaceFirst('sugar', 'honey');
+      if (ing.name.contains('butter'))
+        return ing.copyWith(name: 'olive oil', amount: 'same amount');
+      if (ing.name.contains('cream'))
+        return ing.copyWith(name: 'Greek yogurt', amount: 'same amount');
+      if (ing.name.contains('sugar'))
+        return ing.copyWith(name: 'honey', amount: 'half amount');
       return ing;
     }).toList();
-    
+
     return recipe.copyWith(
       title: '${recipe.title} (Healthier)',
       ingredients: healthierIngredients,
       notes: 'Healthier version with reduced fat and natural sweeteners.',
     );
   }
-  
+
   static Recipe _makeFaster(Recipe recipe) {
     final fasterSteps = recipe.steps.map((step) {
-      if (step.contains('simmer')) return step.replaceFirst('simmer', 'quick boil');
+      if (step.contains('simmer'))
+        return step.replaceFirst('simmer', 'quick boil');
       if (step.contains('bake')) return step.replaceFirst('bake', 'microwave');
       return step;
     }).toList();
-    
+
     return recipe.copyWith(
       title: '${recipe.title} (Quick)',
       steps: fasterSteps,
@@ -427,19 +478,22 @@ class AIService {
       notes: 'Quick version using time-saving techniques.',
     );
   }
-  
+
   static Recipe _makeCreative(Recipe recipe) {
-    final creativeIngredients = List<String>.from(recipe.ingredients);
-    if (!creativeIngredients.contains('herbs')) creativeIngredients.add('fresh herbs');
-    if (!creativeIngredients.contains('spices')) creativeIngredients.add('exotic spices');
-    
+    final names = recipe.ingredients.map((i) => i.name).toList();
+    final creativeIngredients = List<String>.from(names);
+    if (!creativeIngredients.contains('herbs'))
+      creativeIngredients.add('fresh herbs');
+    if (!creativeIngredients.contains('spices'))
+      creativeIngredients.add('exotic spices');
+
     return recipe.copyWith(
       title: '${recipe.title} (Creative)',
-      ingredients: creativeIngredients,
+      ingredients: _toIngredients(creativeIngredients),
       notes: 'Creative version with additional flavors and garnishes.',
     );
   }
-  
+
   static String _getSubstitutionAdvice(String question, Recipe recipe) {
     if (question.contains('milk')) {
       return 'You can substitute milk with water, plant-based milk, or cream for richer results.';
@@ -453,7 +507,7 @@ class AIService {
     if (question.contains('flour')) {
       return 'All-purpose flour works for most recipes. For gluten-free, try almond flour or gluten-free blends.';
     }
-    
+
     return 'Consider the function of the ingredient - binding, moisture, or flavor - when finding substitutes.';
   }
 }

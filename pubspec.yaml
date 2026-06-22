@@ -23,6 +23,9 @@ dependencies:
   # UI
   material_color_utilities: ^0.13.0
   
+  # HTTP / API
+  http: ^1.2.0
+  
   # Utilities
   uuid: ^4.2.1
   cupertino_icons: ^1.0.8

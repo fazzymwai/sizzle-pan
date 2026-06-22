@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sizzle_pan/models/recipe.dart';
-import 'package:sizzle_pan/services/database_service.dart';
+import 'package:sizzle_pan/providers/recipe_provider.dart';
 import 'package:sizzle_pan/services/theme_service.dart';
 
 class RecipeDetailScreen extends StatefulWidget {
@@ -28,7 +29,8 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
       _isLoading = true;
     });
     try {
-      final recipe = await DatabaseService.getRecipeById(widget.recipeId);
+      final recipe =
+          await context.read<RecipeProvider>().getRecipeById(widget.recipeId);
       if (recipe != null) {
         setState(() {
           _recipe = recipe;
@@ -46,10 +48,9 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
   Future<void> _toggleFavorite() async {
     if (_recipe == null) return;
     try {
-      await DatabaseService.toggleFavorite(
-        _recipe!.id,
-        !_recipe!.isFavorite,
-      );
+      await context.read<RecipeProvider>().toggleFavorite(
+            _recipe!.id,
+          );
       _loadRecipe();
     } catch (e) {
       if (mounted) {
@@ -100,8 +101,9 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                   'Oops! Recipe vanished!',
                   style: GoogleFonts.luckiestGuy(
                     fontSize: 24,
-                    color:
-                        isDark ? const Color(0xFFF5EDE6) : ThemeService.charcoal,
+                    color: isDark
+                        ? const Color(0xFFF5EDE6)
+                        : ThemeService.charcoal,
                     letterSpacing: 1,
                   ),
                 ),
@@ -117,12 +119,14 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                 GestureDetector(
                   onTap: () => context.go('/'),
                   child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 32, vertical: 16),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          isDark ? ThemeService.warmOrange : ThemeService.fieryRed,
+                          isDark
+                              ? ThemeService.warmOrange
+                              : ThemeService.fieryRed,
                           ThemeService.goldenYellow,
                         ],
                       ),
@@ -133,8 +137,9 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                       style: GoogleFonts.nunito(
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
-                        color:
-                            isDark ? ThemeService.charcoal : ThemeService.pureWhite,
+                        color: isDark
+                            ? ThemeService.charcoal
+                            : ThemeService.pureWhite,
                       ),
                     ),
                   ),
@@ -171,7 +176,9 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                   ),
                   child: Icon(
                     Icons.arrow_back_rounded,
-                    color: isDark ? ThemeService.warmOrange : ThemeService.fieryRed,
+                    color: isDark
+                        ? ThemeService.warmOrange
+                        : ThemeService.fieryRed,
                     size: 22,
                   ),
                 ),
@@ -254,7 +261,9 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                     end: Alignment.bottomRight,
                     colors: [
                       isDark ? ThemeService.deepRed : ThemeService.fieryRed,
-                      isDark ? ThemeService.warmOrange : ThemeService.goldenYellow,
+                      isDark
+                          ? ThemeService.warmOrange
+                          : ThemeService.goldenYellow,
                     ],
                   ),
                 ),
@@ -315,22 +324,28 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
       children: [
         Expanded(
           child: _buildInfoChip(
-            Icons.schedule_rounded, 'Time',
-            '${_recipe!.cookingTime} min', isDark,
+            Icons.schedule_rounded,
+            'Time',
+            '${_recipe!.cookingTime} min',
+            isDark,
           ),
         ),
         const SizedBox(width: 10),
         Expanded(
           child: _buildInfoChip(
-            Icons.people_rounded, 'Serves',
-            '${_recipe!.servings}', isDark,
+            Icons.people_rounded,
+            'Serves',
+            '${_recipe!.servings}',
+            isDark,
           ),
         ),
         const SizedBox(width: 10),
         Expanded(
           child: _buildInfoChip(
-            Icons.trending_up_rounded, 'Level',
-            _recipe!.difficulty, isDark,
+            Icons.trending_up_rounded,
+            'Level',
+            _recipe!.difficulty,
+            isDark,
           ),
         ),
       ],
@@ -342,14 +357,10 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
       decoration: BoxDecoration(
-        color: isDark
-            ? const Color(0xFF2A221C)
-            : ThemeService.pureWhite,
+        color: isDark ? const Color(0xFF2A221C) : ThemeService.pureWhite,
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
-          color: isDark
-              ? const Color(0xFF3D322A)
-              : ThemeService.warmCream,
+          color: isDark ? const Color(0xFF3D322A) : ThemeService.warmCream,
         ),
         boxShadow: [
           BoxShadow(
@@ -393,8 +404,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
             style: GoogleFonts.nunito(
               fontSize: 15,
               fontWeight: FontWeight.w800,
-              color:
-                  isDark ? const Color(0xFFF5EDE6) : ThemeService.charcoal,
+              color: isDark ? const Color(0xFFF5EDE6) : ThemeService.charcoal,
             ),
           ),
         ],
@@ -446,8 +456,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
               'Pro tip: ${ThemeService.randomChefTip()}',
               style: GoogleFonts.nunito(
                 fontSize: 12,
-                color:
-                    isDark ? const Color(0xFFB0A79E) : ThemeService.warmGrey,
+                color: isDark ? const Color(0xFFB0A79E) : ThemeService.warmGrey,
                 fontWeight: FontWeight.w500,
                 fontStyle: FontStyle.italic,
               ),
@@ -476,8 +485,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
               child: Icon(
                 Icons.shopping_basket_rounded,
                 size: 18,
-                color:
-                    isDark ? ThemeService.warmOrange : ThemeService.fieryRed,
+                color: isDark ? ThemeService.warmOrange : ThemeService.fieryRed,
               ),
             ),
             const SizedBox(width: 10),
@@ -486,8 +494,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
               style: GoogleFonts.nunito(
                 fontSize: 20,
                 fontWeight: FontWeight.w800,
-                color:
-                    isDark ? const Color(0xFFF5EDE6) : ThemeService.charcoal,
+                color: isDark ? const Color(0xFFF5EDE6) : ThemeService.charcoal,
               ),
             ),
           ],
@@ -527,7 +534,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                       ),
                     ),
                     child: Text(
-                      ingredient,
+                      ingredient.name,
                       style: GoogleFonts.nunito(
                         fontSize: 14,
                         color: isDark
@@ -564,8 +571,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
               child: Icon(
                 Icons.menu_book_rounded,
                 size: 18,
-                color:
-                    isDark ? ThemeService.warmOrange : ThemeService.fieryRed,
+                color: isDark ? ThemeService.warmOrange : ThemeService.fieryRed,
               ),
             ),
             const SizedBox(width: 10),
@@ -574,8 +580,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
               style: GoogleFonts.nunito(
                 fontSize: 20,
                 fontWeight: FontWeight.w800,
-                color:
-                    isDark ? const Color(0xFFF5EDE6) : ThemeService.charcoal,
+                color: isDark ? const Color(0xFFF5EDE6) : ThemeService.charcoal,
               ),
             ),
           ],
@@ -677,8 +682,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
               style: GoogleFonts.nunito(
                 fontSize: 20,
                 fontWeight: FontWeight.w800,
-                color:
-                    isDark ? const Color(0xFFF5EDE6) : ThemeService.charcoal,
+                color: isDark ? const Color(0xFFF5EDE6) : ThemeService.charcoal,
               ),
             ),
           ],
@@ -734,7 +738,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
 
   Widget _buildStartCookingButton(bool isDark) {
     return GestureDetector(
-      onTap: () => context.go('/cooking/${_recipe!.id}'),
+      onTap: () => context.push('/cooking/${_recipe!.id}'),
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 18),
@@ -748,9 +752,8 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color:
-                  (isDark ? ThemeService.warmOrange : ThemeService.fieryRed)
-                      .withValues(alpha: 0.3),
+              color: (isDark ? ThemeService.warmOrange : ThemeService.fieryRed)
+                  .withValues(alpha: 0.3),
               blurRadius: 16,
               offset: const Offset(0, 6),
             ),
@@ -765,8 +768,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
               style: GoogleFonts.nunito(
                 fontSize: 18,
                 fontWeight: FontWeight.w800,
-                color:
-                    isDark ? ThemeService.charcoal : ThemeService.pureWhite,
+                color: isDark ? ThemeService.charcoal : ThemeService.pureWhite,
                 letterSpacing: 1,
               ),
             ),

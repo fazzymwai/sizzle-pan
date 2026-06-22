@@ -48,9 +48,7 @@ class _FeatureCardState extends State<FeatureCard>
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bgColor = isDark
-        ? ThemeService.darkBg
-        : ThemeService.pureWhite;
+    final bgColor = isDark ? ThemeService.darkBg : ThemeService.pureWhite;
     final accentColor = widget.color;
 
     return AnimatedBuilder(
@@ -85,54 +83,62 @@ class _FeatureCardState extends State<FeatureCard>
             ],
           ),
           child: Padding(
-            padding: const EdgeInsets.all(18),
+            padding: const EdgeInsets.all(14),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Icon with glowing background
-                Container(
-                  width: 52,
-                  height: 52,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        accentColor.withValues(alpha: 0.2),
-                        accentColor.withValues(alpha: 0.05),
-                      ],
+                Row(
+                  children: [
+                    // Icon with glowing background
+                    Container(
+                      width: 44,
+                      height: 44,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            accentColor.withValues(alpha: 0.2),
+                            accentColor.withValues(alpha: 0.05),
+                          ],
+                        ),
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      child: Center(
+                        child: Icon(
+                          widget.icon,
+                          color: accentColor,
+                          size: 22,
+                        ),
+                      ),
                     ),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Center(
-                    child: Icon(
-                      widget.icon,
-                      color: accentColor,
-                      size: 26,
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        widget.title,
+                        style: GoogleFonts.luckiestGuy(
+                          fontSize: 15,
+                          color: isDark
+                              ? const Color(0xFFF5EDE6)
+                              : ThemeService.charcoal,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-                const SizedBox(height: 14),
-                Text(
-                  widget.title,
-                  style: GoogleFonts.luckiestGuy(
-                    fontSize: 17,
-                    color: isDark
-                        ? const Color(0xFFF5EDE6)
-                        : ThemeService.charcoal,
-                    letterSpacing: 0.5,
+                const Spacer(),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    widget.subtitle,
+                    style: GoogleFonts.nunito(
+                      fontSize: 11,
+                      color: ThemeService.warmGrey,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  widget.subtitle,
-                  style: GoogleFonts.nunito(
-                    fontSize: 12,
-                    color: ThemeService.warmGrey,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),

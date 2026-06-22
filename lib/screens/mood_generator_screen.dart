@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sizzle_pan/models/recipe.dart';
+import 'package:sizzle_pan/providers/recipe_provider.dart';
 import 'package:sizzle_pan/services/ai_service.dart';
-import 'package:sizzle_pan/services/database_service.dart';
 import 'package:sizzle_pan/services/theme_service.dart';
 import 'package:sizzle_pan/widgets/recipe_card.dart';
 
@@ -50,7 +51,8 @@ class _MoodGeneratorScreenState extends State<MoodGeneratorScreen> {
 
     await Future.delayed(const Duration(milliseconds: 500));
 
-    final recipes = AIService.generateRecipesFromMood(_selectedMood, _selectedOccasion);
+    final recipes =
+        AIService.generateRecipesFromMood(_selectedMood, _selectedOccasion);
 
     setState(() {
       _generatedRecipes = recipes;
@@ -60,7 +62,7 @@ class _MoodGeneratorScreenState extends State<MoodGeneratorScreen> {
 
   Future<void> _saveRecipe(Recipe recipe) async {
     try {
-      await DatabaseService.createRecipe(recipe);
+      await context.read<RecipeProvider>().saveRecipe(recipe);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Recipe saved!')),
@@ -78,7 +80,8 @@ class _MoodGeneratorScreenState extends State<MoodGeneratorScreen> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final canGenerate = _selectedMood.isNotEmpty && _selectedOccasion.isNotEmpty;
+    final canGenerate =
+        _selectedMood.isNotEmpty && _selectedOccasion.isNotEmpty;
 
     return Scaffold(
       backgroundColor: isDark ? ThemeService.darkBg : ThemeService.warmCream,
@@ -91,7 +94,7 @@ class _MoodGeneratorScreenState extends State<MoodGeneratorScreen> {
           ),
         ),
         leading: GestureDetector(
-          onTap: () => context.go('/'),
+          onTap: () => context.canPop() ? context.pop() : context.go('/'),
           child: Container(
             margin: const EdgeInsets.all(8),
             decoration: BoxDecoration(
@@ -170,9 +173,7 @@ class _MoodGeneratorScreenState extends State<MoodGeneratorScreen> {
               'How are you feeling?',
               style: GoogleFonts.luckiestGuy(
                 fontSize: 18,
-                color: isDark
-                    ? const Color(0xFFF5EDE6)
-                    : ThemeService.charcoal,
+                color: isDark ? const Color(0xFFF5EDE6) : ThemeService.charcoal,
                 letterSpacing: 0.5,
               ),
             ),
@@ -190,13 +191,20 @@ class _MoodGeneratorScreenState extends State<MoodGeneratorScreen> {
                   },
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
-                    padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 18, vertical: 12),
                     decoration: BoxDecoration(
                       gradient: isSelected
                           ? LinearGradient(
                               colors: isDark
-                                  ? [ThemeService.warmOrange, ThemeService.goldenYellow]
-                                  : [ThemeService.fieryRed, ThemeService.warmOrange],
+                                  ? [
+                                      ThemeService.warmOrange,
+                                      ThemeService.goldenYellow
+                                    ]
+                                  : [
+                                      ThemeService.fieryRed,
+                                      ThemeService.warmOrange
+                                    ],
                             )
                           : null,
                       color: isSelected
@@ -255,9 +263,7 @@ class _MoodGeneratorScreenState extends State<MoodGeneratorScreen> {
               'What\u2019s the occasion?',
               style: GoogleFonts.luckiestGuy(
                 fontSize: 18,
-                color: isDark
-                    ? const Color(0xFFF5EDE6)
-                    : ThemeService.charcoal,
+                color: isDark ? const Color(0xFFF5EDE6) : ThemeService.charcoal,
                 letterSpacing: 0.5,
               ),
             ),
@@ -275,13 +281,20 @@ class _MoodGeneratorScreenState extends State<MoodGeneratorScreen> {
                   },
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
-                    padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 18, vertical: 12),
                     decoration: BoxDecoration(
                       gradient: isSelected
                           ? LinearGradient(
                               colors: isDark
-                                  ? [ThemeService.goldenYellow, ThemeService.warmOrange]
-                                  : [ThemeService.goldenYellow, ThemeService.fieryRed],
+                                  ? [
+                                      ThemeService.goldenYellow,
+                                      ThemeService.warmOrange
+                                    ]
+                                  : [
+                                      ThemeService.goldenYellow,
+                                      ThemeService.fieryRed
+                                    ],
                             )
                           : null,
                       color: isSelected
@@ -300,7 +313,8 @@ class _MoodGeneratorScreenState extends State<MoodGeneratorScreen> {
                       boxShadow: isSelected
                           ? [
                               BoxShadow(
-                                color: ThemeService.goldenYellow.withValues(alpha: 0.3),
+                                color: ThemeService.goldenYellow
+                                    .withValues(alpha: 0.3),
                                 blurRadius: 12,
                                 offset: const Offset(0, 4),
                               ),
@@ -310,7 +324,8 @@ class _MoodGeneratorScreenState extends State<MoodGeneratorScreen> {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(occasion.emoji, style: const TextStyle(fontSize: 18)),
+                        Text(occasion.emoji,
+                            style: const TextStyle(fontSize: 18)),
                         const SizedBox(width: 8),
                         Text(
                           occasion.name,
@@ -349,7 +364,9 @@ class _MoodGeneratorScreenState extends State<MoodGeneratorScreen> {
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                        color: (isDark ? ThemeService.warmOrange : ThemeService.fieryRed)
+                        color: (isDark
+                                ? ThemeService.warmOrange
+                                : ThemeService.fieryRed)
                             .withValues(alpha: 0.3),
                         blurRadius: 16,
                         offset: const Offset(0, 6),
@@ -363,7 +380,8 @@ class _MoodGeneratorScreenState extends State<MoodGeneratorScreen> {
                             height: 22,
                             child: CircularProgressIndicator(
                               strokeWidth: 2.5,
-                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.white),
                             ),
                           )
                         : Row(
@@ -420,10 +438,13 @@ class _MoodGeneratorScreenState extends State<MoodGeneratorScreen> {
               Container(
                 padding: const EdgeInsets.all(32),
                 decoration: BoxDecoration(
-                  color: isDark ? const Color(0xFF2A221C) : ThemeService.pureWhite,
+                  color:
+                      isDark ? const Color(0xFF2A221C) : ThemeService.pureWhite,
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
-                    color: isDark ? const Color(0xFF3D322A) : ThemeService.warmCream,
+                    color: isDark
+                        ? const Color(0xFF3D322A)
+                        : ThemeService.warmCream,
                   ),
                 ),
                 child: Center(
@@ -461,7 +482,7 @@ class _MoodGeneratorScreenState extends State<MoodGeneratorScreen> {
                   final recipe = _generatedRecipes[index];
                   return RecipeCard(
                     recipe: recipe,
-                    onTap: () => context.go('/recipe/${recipe.id}'),
+                    onTap: () => context.push('/recipe/${recipe.id}'),
                     onSave: () => _saveRecipe(recipe),
                   );
                 },

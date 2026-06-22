@@ -12,7 +12,8 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
+class _HomeScreenState extends State<HomeScreen>
+    with SingleTickerProviderStateMixin {
   late AnimationController _sizzleController;
   late Animation<double> _sizzleAnimation;
 
@@ -70,7 +71,8 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                                 builder: (context, child) {
                                   return Transform.scale(
                                     scale: _sizzleAnimation.value,
-                                    child: const Text('🍳', style: TextStyle(fontSize: 28)),
+                                    child: const Text('🍳',
+                                        style: TextStyle(fontSize: 28)),
                                   );
                                 },
                               ),
@@ -146,11 +148,13 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                         colors: isDark
                             ? [
                                 ThemeService.warmOrange.withValues(alpha: 0.15),
-                                ThemeService.goldenYellow.withValues(alpha: 0.05),
+                                ThemeService.goldenYellow
+                                    .withValues(alpha: 0.05),
                               ]
                             : [
                                 ThemeService.fieryRed.withValues(alpha: 0.08),
-                                ThemeService.goldenYellow.withValues(alpha: 0.04),
+                                ThemeService.goldenYellow
+                                    .withValues(alpha: 0.04),
                               ],
                       ),
                       borderRadius: BorderRadius.circular(20),
@@ -173,7 +177,8 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                             borderRadius: BorderRadius.circular(16),
                           ),
                           child: const Center(
-                            child: Text('👨‍🍳', style: TextStyle(fontSize: 28)),
+                            child:
+                                Text('👨‍🍳', style: TextStyle(fontSize: 28)),
                           ),
                         ),
                         const SizedBox(width: 14),
@@ -213,28 +218,28 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                     mainAxisSpacing: 14,
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    childAspectRatio: 0.9,
+                    childAspectRatio: 1.2,
                     children: [
                       FeatureCard(
                         title: 'What I Have',
                         subtitle: 'Recipes from your ingredients',
                         icon: Icons.kitchen_outlined,
                         color: const Color(0xFF4CAF50),
-                        onTap: () => context.go('/ingredients'),
+                        onTap: () => context.push('/ingredients'),
                       ),
                       FeatureCard(
                         title: 'How I Feel',
                         subtitle: 'Cook according to your mood',
                         icon: Icons.mood_outlined,
                         color: const Color(0xFF9C27B0),
-                        onTap: () => context.go('/mood'),
+                        onTap: () => context.push('/mood'),
                       ),
                       FeatureCard(
-                        title: 'Search & Remix',
-                        subtitle: 'Find and twist recipes',
-                        icon: Icons.travel_explore_outlined,
-                        color: const Color(0xFF2196F3),
-                        onTap: () => context.go('/search'),
+                        title: 'Shopping List',
+                        subtitle: 'What you need to buy',
+                        icon: Icons.shopping_cart_outlined,
+                        color: const Color(0xFF4CAF50),
+                        onTap: () => context.push('/shopping'),
                       ),
                       FeatureCard(
                         title: 'My Recipes',
@@ -266,7 +271,8 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                           width: 32,
                           height: 32,
                           decoration: BoxDecoration(
-                            color: ThemeService.goldenYellow.withValues(alpha: 0.15),
+                            color: ThemeService.goldenYellow
+                                .withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: const Center(
